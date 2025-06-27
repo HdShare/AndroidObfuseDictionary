@@ -7,7 +7,7 @@ def read_file(filename):
     return lines
 
 
-def generate(lines, repeat=3):
+def generate(lines, repeat=5):
     return [''.join(combination) for combination in itertools.product(lines, repeat=repeat)]
 
 
