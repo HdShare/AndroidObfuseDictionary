@@ -1,5 +1,10 @@
 import itertools
 
+BASE_FILE = 'obf-dict-base.txt'
+OUTPUT_FILE = 'obf-dict.txt'
+MAX_OUTPUT_COUNT = 500_000
+REPEAT_COUNT = 14
+
 
 def read_file(filename):
     with open(filename, 'r', encoding='utf-8') as file:
@@ -7,8 +12,16 @@ def read_file(filename):
     return lines
 
 
-def generate(lines, repeat=5):
-    return [''.join(combination) for combination in itertools.product(lines, repeat=repeat)]
+def generate(lines, repeat=REPEAT_COUNT):
+    if len(lines) < repeat:
+        raise ValueError(f'基础字符数量不足：至少需要 {repeat} 个，当前只有 {len(lines)} 个')
+
+    combinations = []
+    for index, combination in enumerate(itertools.permutations(lines, repeat)):
+        if index >= MAX_OUTPUT_COUNT:
+            break
+        combinations.append(''.join(combination))
+    return combinations
 
 
 def write_file(combinations, filename):
@@ -17,4 +30,4 @@ def write_file(combinations, filename):
 
 
 if __name__ == '__main__':
-    write_file(generate(read_file('obf-dict-base.txt')), 'obf-dict.txt')
+    write_file(generate(read_file(BASE_FILE)), OUTPUT_FILE)
